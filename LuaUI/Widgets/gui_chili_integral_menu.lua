@@ -352,6 +352,9 @@ local function ClickFunc(button, x, y, mouse)
 		local index = Spring.GetCmdDescIndex(button.cmdid)
 		if index then
 			Spring.SetActiveCommand(index,mb,left,right,alt,ctrl,meta,shift)
+			if alt and button.isStructure and WG.Terraform_SetPlacingRectangle then
+				WG.Terraform_SetPlacingRectangle(-button.cmdid)
+			end
 		end
 	end
 end
@@ -362,6 +365,7 @@ end
 local function MakeButton(container, cmd, insertItem, index)
 	local isState = (cmd.type == CMDTYPE.ICON_MODE and #cmd.params > 1) or states_commands[cmd.id]	--is command a state toggle command?
 	local isBuild = (cmd.id < 0)
+	local isStructure = (cmd.id < 0) and menuChoice ~= 1 and menuChoice ~= 6 
 	local gridHotkeyed = not isState and menuChoice ~= 1 and menuChoice ~= 6 
 	local text
 	local texture
@@ -460,6 +464,7 @@ local function MakeButton(container, cmd, insertItem, index)
 			isDisabled = cmd.disabled;
 			tooltip = tooltip;
 			cmdid = cmd.id;
+			isStructure = isStructure;
 			OnClick = {function(self, x, y, mouse) ClickFunc(self, x, y, mouse) end}
 		}
 		if (isState) then 
@@ -1132,7 +1137,6 @@ end
 
 function widget:KeyPress(key, modifier, isRepeat)
 	if (hotkeyMode) and not isRepeat then 
-		local thingsDone = false
 		local pos = gridKeyMap[key]
 		if pos and sp_commands[pos[1]] and sp_commands[pos[1]].children[pos[2]] then
 			local cmdid = sp_commands[pos[1]].children[pos[2]]
@@ -1142,16 +1146,14 @@ function widget:KeyPress(key, modifier, isRepeat)
 					local index = Spring.GetCmdDescIndex(cmdid)
 					if index then
 						Spring.SetActiveCommand(index,1,true,false,false,false,false,false)
-						thingsDone = true
 					end
 				end
 			end
 		end
-		hotkeyMode = false
 		menuChoice = 1 -- auto-return to orders to make it clear hotkey time is over
 		Update(true)
 		ColorTabs()
-		return thingsDone 
+		return (pos and true) or false 
 	elseif menuChoice == 6 and options.unitstabhotkey.value and selectedFac then
 		local pos = gridKeyMap[key]
 		if pos and pos[1] ~= 3 and sp_commands[pos[1]] and sp_commands[pos[1]].children[pos[2]] then
@@ -1595,7 +1597,7 @@ function widget:GameFrame(n)
 			if not manualfireweapon.status then
 				local _,_, weaponReloadFrame, _, _ = spGetUnitWeaponState(unitID, 3-reverseCompat) --Note: weapon no.3 is by ZK convention is usually used for user controlled weapon
 				local isManualFire, reloadTime = IsWeaponManualFire(unitID, 3)
-				if isManualFire then
+				if isManualFire and weaponReloadFrame then
 					if weaponReloadFrame > currentFrame then
 						manualfireweapon.status = false
 						local remainingTime = (weaponReloadFrame - currentFrame)*1/30

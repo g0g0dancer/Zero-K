@@ -206,7 +206,7 @@ local function DestroyAlliance(allianceID)
 			EchoUIMessage("Game Over: If this is true, then please resign.")
 			return	-- don't perform victory check
 		elseif destroy_type == 'destroy' then	-- kaboom
-			EchoUIMessage("Game Over: Destroying alliance " .. allianceID)
+			EchoUIMessage("Alliance " .. allianceID .. " has been destroyed!")
 			for i=1,#teamList do
 				local t = teamList[i]
 				local teamUnits = spGetTeamUnits(t) 
@@ -214,7 +214,9 @@ local function DestroyAlliance(allianceID)
 					local u = teamUnits[j]
 					local pwUnits = (GG.PlanetWars or {}).unitsByID
 					if pwUnits and pwUnits[u] then
+						GG.allowTransfer = true
 						spTransferUnit(u, gaiaTeamID, true)		-- don't blow up PW buildings
+						GG.allowTransfer = false
 					else
 						toDestroy[u] = true
 					end
@@ -222,7 +224,7 @@ local function DestroyAlliance(allianceID)
 				spKillTeam(t)
 			end
 		elseif destroy_type == 'losecontrol' then	-- no orders can be issued to team
-			EchoUIMessage("Game Over: Destroying alliance " .. allianceID)
+			EchoUIMessage("Alliance " .. allianceID .. " has been defeated!")
 			for i=1,#teamList do
 				spKillTeam(teamList[i])
 			end

@@ -1237,7 +1237,59 @@ function widgetHandler:CommandNotify(id, params, options)
   return false
 end
 
---local MUTE_SPECTATORS = Spring.GetModOptions().mutespec
+local MUTE_SPECTATORS = Spring.GetModOptions().mutespec
+local MUTE_LOBBY = Spring.GetModOptions().mutelobby
+local playerNameToID 
+
+do
+	local teams = Spring.GetTeamList();
+	local humanAlly = {}
+	local humanAllyCount = 0
+	gaiaTeam = Spring.GetGaiaTeamID()
+	for _, teamID in ipairs(teams) do
+		local teamLuaAI = Spring.GetTeamLuaAI(teamID)
+		if ((teamLuaAI == nil or teamLuaAI == "") and teamID ~= gaiaTeam) then
+			local _,_,_,ai,side,ally = Spring.GetTeamInfo(teamID)
+			if (not ai) and (not humanAlly[ally]) then 
+				humanAlly[ally] = true
+				humanAllyCount = humanAllyCount + 1
+			end	
+		end
+	end
+	
+	if MUTE_SPECTATORS == 'autodetect' then
+		if humanAllyCount > 2 then
+			MUTE_SPECTATORS = true
+		else
+			MUTE_SPECTATORS = false
+		end
+	else
+		MUTE_SPECTATORS = (MUTE_SPECTATORS == 'mute')
+	end
+	
+	if MUTE_LOBBY == 'autodetect' then
+		if humanAllyCount > 2 then 
+			MUTE_LOBBY = true
+		else
+			MUTE_LOBBY = false
+		end
+	else
+		MUTE_LOBBY = (MUTE_LOBBY == 'mute')
+	end
+
+	if MUTE_LOBBY then
+		playerNameToID = {}
+		local playerList = Spring.GetPlayerList()
+		for i = 1, #playerList do
+			local playerID = playerList[i]
+			local name, _, spectating = Spring.GetPlayerInfo(playerID)
+			if not spectating then
+				playerNameToID[name] = playerID
+			end
+		end
+	end
+end
+
 
 --NOTE: StringStarts() and MessageProcessor is included in "chat_preprocess.lua"
 function widgetHandler:AddConsoleLine(msg, priority)
@@ -1264,23 +1316,48 @@ function widgetHandler:AddConsoleLine(msg, priority)
 	local newMsg = { text = msg, priority = priority }
 	MessageProcessor:ProcessConsoleLine(newMsg) --chat_preprocess.lua
 	if newMsg.msgtype ~= 'other' and newMsg.msgtype ~= 'autohost' and newMsg.msgtype ~= 'game_message' then 
+		if MUTE_SPECTATORS and newMsg.msgtype == 'spec_to_everyone' then
+			local spectating = select(1, Spring.GetSpectatingState())
+			if not spectating then
+				return
+			end
+			newMsg.msgtype = 'spec_to_specs'
+		end
 		local playerID_msg = newMsg.player and newMsg.player.id --retrieve playerID from message.
-		--if MUTE_SPECTATORS and not select(1, Spring.GetSpectatingState()) then
-		--	local specMessage = select(3, Spring.GetPlayerInfo(playerID_msg))
-		--	if specMessage then
-		--		return
-		--	end
-		--end
 		local customkeys = select(10, Spring.GetPlayerInfo(playerID_msg))
 		if customkeys and customkeys.muted then
 			local myPlayerID = Spring.GetLocalPlayerID()
 			if myPlayerID == playerID_msg then --if I am the muted, then:
-				newMsg.argument="<your message was blocked by mute>"	--remind myself that I am muted.		
+				newMsg.argument = "<your message was blocked by mute>"	--remind myself that I am muted.		
 				msg = "<your message was blocked by mute>" 
 			else --if I am NOT the muted, then: delete this message
 				return
 			end
 			--TODO: improve chili_chat2 spam-filter/dedupe-detection too.
+		end
+	end
+	
+	if MUTE_LOBBY and newMsg.msgtype == 'autohost' then
+		local spectating = select(1, Spring.GetSpectatingState())
+		if (not spectating) and newMsg.argument then
+			-- Chat from lobby has format '<PlayerName>message'
+			if string.sub(newMsg.argument, 1, 1) == "<" then
+				local endChar = string.find(newMsg.argument, ">")
+				if endChar then
+					local name = string.sub(newMsg.argument, 2, endChar-1)
+					if playerNameToID[name] then
+						local spectating = select(3, Spring.GetPlayerInfo(playerNameToID[name]))
+						if spectating then
+							playerNameToID[name] = nil
+							return
+						end
+					else
+						return
+					end
+				else
+					return
+				end
+			end
 		end
 	end
   

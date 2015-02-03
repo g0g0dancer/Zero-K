@@ -11,10 +11,11 @@ local leg3 = piece 'leg3' 	-- front right
 local leg4 = piece 'leg4' 	-- back left
 local leg5 = piece 'leg5' 	-- middle left
 local leg6 = piece 'leg6' 	-- front left
-local platform, gun, elevator, elevator2, panel_r, panel_l, cover_r, cover_l, flare = piece('platform', 'gun', 'elevator', 'elevator2', 'panel_r', 'panel_l', 'cover_r', 'cover_l', 'flare')
+local platform, gun, elevator, elevator2, panel_r, panel_l, cover_r, cover_l, flare  = piece('platform', 'gun', 'elevator', 'elevator2', 'panel_r', 'panel_l', 'cover_r', 'cover_l', 'flare')
+
 
 local smokePiece = {base, gun}
-local nanoPieces = {flare}
+local nanoPiece = flare
 
 --------------------------------------------------------------------------------
 -- constants
@@ -77,7 +78,7 @@ end
 
 function script.Create()
 	StartThread(SmokeUnit, smokePiece)
-	Spring.SetUnitNanoPieces(unitID, nanoPieces)
+	Spring.SetUnitNanoPieces(unitID, {nanoPiece})
 end
 
 function script.StartMoving()
@@ -126,8 +127,8 @@ function script.StopBuilding()
 end
 
 function script.QueryNanoPiece()
-	GG.LUPS.QueryNanoPiece(unitID,unitDefID,Spring.GetUnitTeam(unitID),gun)
-	return gun
+	GG.LUPS.QueryNanoPiece(unitID,unitDefID,Spring.GetUnitTeam(unitID),flare)
+	return flare
 end
 
 function script.Killed(recentDamage, maxHealth)

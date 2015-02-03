@@ -1,4 +1,4 @@
-
+ 
 -- $Id: ModOptions.lua 4642 2009-05-22 05:32:36Z carrepairer $
 
 
@@ -84,14 +84,32 @@ local options = {
     section= 'a_important',
     def = false,
   },
-  --{
-  --  key = "mutespec",
-  --  name = "Mute Spectators",
-  --  desc = "Prevent spectators from communcating with players",
-  --  type = "bool",
-  --  section= 'modifiers',
-  --  def = false,
-  --},
+	{
+		key     = 'mutespec',
+		name    = 'Mute Spectators',
+		desc    = 'Determines whether spectators can talk to players.',
+		type    = 'list',
+		section = 'a_important',
+		def     = 'autodetect',
+		items   = {
+			{ key='mute', name = "Mute", desc = 'Mutes spectators.' },
+			{ key='autodetect', name = "Autodetect", desc = 'Mutes spectators in FFA (more than two teams).' },
+			{ key='nomute', name = "No Mute", desc = 'Does not mute spectators.' },
+		},
+	},
+	{
+		key     = 'mutelobby',
+		name    = 'Mute Lobby',
+		desc    = 'Determines whether chat in the lobby is visible ingame.',
+		type    = 'list',
+		section = 'a_important',
+		def     = 'autodetect',
+		items   = {
+			{ key='mute', name = "Mute", desc = 'Mutes the lobby.' },
+			{ key='autodetect', name = "Autodetect", desc = 'Mutes the lobby in FFA (more than two teams).' },
+			{ key='nomute', name = "No Mute", desc = 'Does not mute the lobby.' },
+		},
+	},
     {
         key='hilltime',
         name='Hill control time',
@@ -515,30 +533,6 @@ local options = {
     min    = 0,
     max    = 100,
     step   = 0.05,  -- quantization is aligned to the def value
-                    -- (step <= 0) means that there is no quantization
-  },
-  {
-    key    = 'minwind',
-    name   = 'Minimum Wind',
-    desc   = 'Minimum wind strength. Entering a negative value will use map\'s default.',
-    type   = 'number',
-    section= 'mapsettings',
-    def    = 0,
-    min    = -0.1,
-    max    = 20,
-    step   = 0.1,  -- quantization is aligned to the def value
-                    -- (step <= 0) means that there is no quantization
-  },
-  {
-    key    = 'maxwind',
-    name   = 'Maximum Wind',
-    desc   = 'Maximum wind strength. Entering a negative value will use map\'s default.',
-    type   = 'number',
-    section= 'mapsettings',
-    def    = 2.5,
-    min    = -0.1,
-    max    = 20,
-    step   = 0.1,  -- quantization is aligned to the def value
                     -- (step <= 0) means that there is no quantization
   },
   {

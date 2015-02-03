@@ -290,14 +290,14 @@ end
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 -- Use old diving bomber for 91.0
---
---if reverseCompat then
---	for i, name in pairs(UnitDefs.factoryplane.buildoptions) do
---		if name == "bomberdive" then
---			UnitDefs.factoryplane.buildoptions[i] = "corshad"
---		end
---	end
---end
+
+if reverseCompat then
+	for i, name in pairs(UnitDefs.factoryplane.buildoptions) do
+		if name == "bomberdive" then
+			UnitDefs.factoryplane.buildoptions[i] = "corshad"
+		end
+	end
+end
 
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
@@ -606,6 +606,17 @@ end
 --    end
 --  end
 --end
+
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+-- Set drones to take forever to build such that normal constructors do not complete them.
+-- 
+for name, ud in pairs(UnitDefs) do
+	if ud.customparams.is_drone then
+		ud.customparams.real_buildtime = ud.buildtime
+		ud.buildtime = ud.buildtime*1000000000
+	end
+end
 
 
 --------------------------------------------------------------------------------

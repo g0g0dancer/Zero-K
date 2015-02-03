@@ -1441,7 +1441,7 @@ SetupPanels = function ()
 		height = 150
 	end
 	lastSizeX = width
-
+	
 	window_cpl = Window:New{  
 		dockable = true,
 		name = "Player List",

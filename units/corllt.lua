@@ -42,6 +42,7 @@ unitDef = {
   idleAutoHeal                  = 5,
   idleTime                      = 1800,
   levelGround                   = false,
+  losEmitHeight                 = 60,
   mass                          = 128,
   maxDamage                     = 785,
   maxSlope                      = 36,
@@ -90,6 +91,11 @@ unitDef = {
       coreThickness           = 0.4,
       craterBoost             = 0,
       craterMult              = 0,
+
+	  customparams = {
+		stats_hide_damage = 1, -- continuous laser
+		stats_hide_reload = 1,
+	  },
 
       damage                  = {
         default = 7.15,
