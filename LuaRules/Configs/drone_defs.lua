@@ -18,18 +18,28 @@ local carrierDefNames = {
 			offsets = {0, 60, 0, colvolMidX = 0, colvolMidY = 0, colvolMidZ = 0, aimX = 0, aimY = 0, aimZ = 0}
 		},
 	},
-	
 	shipcarrier = {
 		spawnPieces = {"DroneAft", "DroneFore", "DroneLower","DroneUpper"},
 		{
-			drone = UnitDefNames.carrydrone.id, 
+			drone = UnitDefNames.attackdrone.id, 
 			reloadTime = 5, 
 			maxDrones = 8, 
-			spawnSize = 1, 
-			range = 1000, 
-			buildTime = 25, 
+			spawnSize = 2, 
+			range = 2000, 
+			buildTime = 6, 
 			maxBuild = 4,
 			offsets = {0, 0, 0, colvolMidX = 0, colvolMidY = 0, colvolMidZ = 0, aimX = 0, aimY = 0, aimZ = 0}
+		},
+
+		{
+			drone = UnitDefNames.battledrone.id,
+			reloadTime = 25, 
+			maxDrones = 2, 
+			spawnSize = 1, 
+			range = 2000, 
+			buildTime = 9, 
+			maxBuild = 1,
+			offsets = {0, 35, 0, colvolMidX = 0, colvolMidY = 0, colvolMidZ = 0, aimX = 0, aimY = 0, aimZ = 0}
 		},
 	},
 	--corcrw = { {drone = UnitDefNames.attackdrone.id, reloadTime = 15, maxDrones = 6, spawnSize = 2, range = 900, buildTime=3,
