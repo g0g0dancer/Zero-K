@@ -1,15 +1,16 @@
 unitDef = {
   unitname               = [[shipriot]],
-  name                   = [[Corsair]],
-  description            = [[Corvette (Raider/Riot)]],
-  acceleration           = 0.0417,
+  name                   = [[Corvette]],
+  description            = [[Corvette (AntiSub/Riot)]],
+  acceleration           = 0.142,
   activateWhenBuilt      = true,
   brakeRate              = 0.142,
-  buildCostEnergy        = 220,
-  buildCostMetal         = 220,
+  buildAngle             = 16384,
+  buildCostEnergy        = 620,
+  buildCostMetal         = 620,
   builder                = false,
   buildPic               = [[shipriot.png]],
-  buildTime              = 220,
+  buildTime              = 620,
   canAttack              = true,
   canGuard               = true,
   canMove                = true,
@@ -21,9 +22,8 @@ unitDef = {
   corpse                 = [[DEAD]],
 
   customParams           = {
-    helptext       = [[This Corvette comes equipped with two shotguns which are effective against anything which gets close. It has no weapons effective against underwater targets.]],
+    helptext       = [[This Corvette is great against two types of targets, swarms and subs. Equiped with a Tripple Barrage Anti Submarine Mortar on its stern for those slow undersea clusters, as well as a Sonic Blaster on the Bow. While it is not fast enough to chase down fast units, it is higly maneuvarable which can make it hard to hit, especially by subs]],
 	turnatfullspeed = [[1]],
-	--extradrawrange = 420,
   },
 
   explodeAs              = [[SMALL_UNITEX]],
@@ -57,23 +57,22 @@ unitDef = {
   
   sonarDistance          = 500,
   turninplace            = 0,
-  turnRate               = 500,
+  turnRate               = 900,
   waterline              = 0,
   workerTime             = 0,
 
   weapons                = {
 
     {
-      def                = [[SHOTGUN]],
+      def                = [[TORPEDO]],
       badTargetCategory  = [[FIXEDWING]],
-      onlyTargetCategory = [[FIXEDWING LAND SINK TURRET SHIP SWIM FLOAT GUNSHIP HOVER]],
+      onlyTargetCategory = [[SWIM LAND SUB SINK TURRET FLOAT SHIP HOVER]],
     },
 
-
     {
-      def                = [[SHOTGUN]],
+      def                = [[SONICGUN]],
       badTargetCategory  = [[FIXEDWING]],
-      onlyTargetCategory = [[FIXEDWING LAND SINK TURRET SHIP SWIM FLOAT GUNSHIP HOVER]],
+      onlyTargetCategory = [[FIXEDWING LAND SINK TURRET SUB SHIP SWIM FLOAT GUNSHIP HOVER]],
     },
 
   },
@@ -81,45 +80,95 @@ unitDef = {
 
   weaponDefs             = {
 
-    SHOTGUN = {
-	name                    = [[Shotgun]],
-	areaOfEffect            = 48,
-	burst					= 4,
-	burstRate				= 0.03,
-	coreThickness           = 0.5,
-	craterBoost             = 0,
-	craterMult              = 0,
-	
-	damage                  = {
-		default = 32,
-		planes  = 32,
-		subs    = 1.6,
+    SONICGUN         = {
+		name                    = [[Light Sonic Blaster]],
+		areaOfEffect            = 0,
+		avoidFeature            = false,
+		avoidFriendly           = true,
+		burnblow                = true,
+		craterBoost             = 0,
+		craterMult              = 0,
+		collisionSize			= 16,
+
+		customParams            = {
+			single_hit = 1,
+		},
+
+		damage                  = {
+			default = 150,
+			planes  = 150,
+			subs    = 150,
+		},
+		
+		cegTag					= [[sonictrail]],
+		explosionGenerator		= [[custom:sonic]],
+		impulseBoost            = 60,
+		impulseFactor           = 0.5,
+		interceptedByShieldType = 1,
+		intensity				= 0.6,
+		noSelfDamage            = true,
+		noExplode				= true,
+		range                   = 380,
+		reloadtime              = 3,
+		soundStart              = [[weapon/sonic_blaster]],
+		soundHit                = [[weapon/unfa_blast_2]],
+		texture1                = [[sonic_glow]],
+		texture2                = [[null]],
+		rgbColor 				= {0, 0.25, 0.5},
+		thickness				= 10,
+		turret                  = true,
+		weaponType              = [[LaserCannon]],
+		weaponVelocity           = 1000,
+		waterweapon				= true,
+		duration				= 0.05,
 	},
-	
-	duration                = 0.02,
-	explosionGenerator      = [[custom:BEAMWEAPON_HIT_YELLOW]],
-	fireStarter             = 50,
-	heightMod               = 1,
-	impulseBoost            = 0,
-	impulseFactor           = 0.4,
-	interceptedByShieldType = 1,
-	noSelfDamage            = true,
-	projectiles				= 4,
-	range                   = 320,
-	reloadtime              = 2.4,
-	rgbColor                = [[1 1 0]],
-	soundHit                = [[impacts/shotgun_impactv5]],
-	soundStart              = [[weapon/cannon/cannon_fire4]],
-	soundStartVolume		= 0.05,
-	soundTrigger            = true,
-	sprayangle				= 2600,
-	thickness               = 2,
-	tolerance               = 10000,
-	turret                  = true,
-	weaponType              = [[LaserCannon]],
-	weaponVelocity          = 880,
-   },
-	
+
+  
+    TORPEDO = {
+      name                    = [[Undersea Charge Launcher]],
+      areaOfEffect            = 100,
+      burst                   = 3,
+	burstRate               = 0.3,
+      avoidFriendly           = false,
+      bouncerebound           = 1,
+      bounceslip              = 1,
+      burnblow                = true,
+      canAttackGround         = false, -- also workaround for range hax
+      collideFriendly         = false,
+      craterBoost             = 0,
+      craterMult              = 0,
+	  
+      damage                  = {
+        default = 100,
+	subs    = 100,
+      },
+
+      explosionGenerator      = [[custom:TORPEDO_HIT]],
+      groundbounce            = 1,
+      impactOnly              = false,
+      impulseBoost            = 0,
+      impulseFactor           = 0.6,
+      interceptedByShieldType = 1,
+      leadlimit               = 1,
+      myGravity               = 2,
+      model                   = [[diskball.s3o]],
+      numBounce               = 1,
+      range                   = 360,
+      reloadtime              = 4,
+      soundHit                = [[TorpedoHitVariable]],
+      soundHitVolume          = 2.6,
+      --soundStart            = [[weapon/torpedo]],
+      startVelocity           = 80,
+      tolerance               = 1000000,
+      tracks                  = true,
+      turnRate                = 30000,
+      turret                  = true,
+      waterWeapon             = true,
+      weaponAcceleration      = 10,
+      weaponType              = [[TorpedoLauncher]],
+      weaponVelocity          = 160,
+    },
+
 	
   },
 

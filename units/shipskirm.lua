@@ -1,15 +1,15 @@
 unitDef = {
   unitname               = [[shipskirm]],
   name                   = [[Mistral]],
-  description            = [[Rocket Boat (Skirmisher)]],
+  description            = [[Missile Ship (Skirmisher)]],
   acceleration           = 0.039,
   activateWhenBuilt      = true,
   brakeRate              = 0.115,
-  buildCostEnergy        = 240,
-  buildCostMetal         = 240,
+  buildCostEnergy        = 300,
+  buildCostMetal         = 300,
   builder                = false,
   buildPic               = [[shipskirm.png]],
-  buildTime              = 240,
+  buildTime              = 300,
   canAttack              = true,
   canGuard               = true,
   canMove                = true,
@@ -22,7 +22,7 @@ unitDef = {
   corpse                 = [[DEAD]],
 
   customParams           = {
-    helptext       = [[This Rocket Boat fires a salvo of four medium-range rockets, useful for bombarding sea and shore targets. Beware of subs and anything with enough speed to get close.]],
+       helptext       = [[This Missile Ship fires a barrage of 4 missles, which home in on their target no matter how fast they are going. Great for dealing with slow Enemies, or anything that can't close the distance in time to fire back. Beware of subs or anything that gets to close.]],
 	turnatfullspeed = [[1]],
     modelradius     = [[24]],
   },
@@ -36,8 +36,8 @@ unitDef = {
   idleAutoHeal           = 5,
   idleTime               = 1800,
   losEmitHeight          = 30,
-  maxDamage              = 650,
-  maxVelocity            = 2.3,
+  maxDamage              = 800,
+  maxVelocity            = 2.5,
   minCloakDistance       = 350,
   minWaterDepth          = 10,
   movementClass          = [[BOAT3]],
@@ -45,6 +45,7 @@ unitDef = {
   noAutoFire             = false,
   noChaseCategory        = [[TERRAFORM SATELLITE SUB]],
   objectName             = [[shipskirm.s3o]],
+  scale                  = [[0.9]],
   script		         = [[shipskirm.lua]],
   seismicSignature       = 4,
   selfDestructAs         = [[SMALL_UNITEX]],
@@ -66,60 +67,61 @@ unitDef = {
 
   weapons                = {
 
-	{
-      def                = [[ROCKET]], 
+    {
+      def                = [[MISSILE]],
 	  badTargetCategory	 = [[FIXEDWING GUNSHIP]],
       onlyTargetCategory = [[FIXEDWING LAND SINK TURRET SHIP SWIM FLOAT GUNSHIP HOVER]],
     },
-	
+
   },
 
 
   weaponDefs             = {
 
-     ROCKET = {
-      name                    = [[Unguided Rocket]],
-      areaOfEffect            = 75,
-	  burst                   = 4,
-	  burstRate               = 0.3,
-      cegTag                  = [[missiletrailred]],
+    MISSILE = {
+
+      name                    = [[Guided Missile]],
+      areaOfEffect            = 10,
+      burst                   = 4,
+      burstRate               = 0.2,
+      cegTag                  = [[missiletrailyellow]],
       craterBoost             = 1,
       craterMult              = 2,
 
-      customParams        = {
-		light_camera_height = 1800,
-      },
-	  
+
       damage                  = {
-        default = 280,
-        planes  = 280,
-        subs    = 28,
+
+        default = 50,
+        subs    = 13,
       },
 
-      fireStarter             = 70,
-      flightTime              = 3.5,
+      edgeEffectiveness       = 0.4,
+
+      explosionGenerator      = [[custom:FLASH2]],
+      fireStarter             = 20,
+      flightTime              = 5,
       impulseBoost            = 0,
       impulseFactor           = 0.4,
+      impactOnly              = false,
       interceptedByShieldType = 2,
-      model                   = [[wep_m_hailstorm.s3o]],
+      model                   = [[wep_m_frostshard.s3o]],
       noSelfDamage            = true,
-      predictBoost            = 1,
-      range                   = 610,
-      reloadtime              = 8.0,
-      smokeTrail              = true,
-      soundHit                = [[explosion/ex_med4]],
-      soundHitVolume          = 8,
-      soundStart              = [[weapon/missile/missile2_fire_bass]],
-      soundStartVolume        = 7,
-      startVelocity           = 230,
-      texture2                = [[darksmoketrail]],
-      tracks                  = false,
-      trajectoryHeight        = 0.6,
-      turnrate                = 1000,
+      range                   = 700,
+      reloadtime              = 2.4,
+      smokeTrail              = false,
+      soundHit                = [[explosion/ex_small13]],
+	  soundStart              = [[weapon/missile/missile_fire11]],
+      startVelocity           = 400,
+      tolerance               = 9000,
+      tracks                  = true,
+      trajectoryHeight        = 0.7,
+      turnRate                = 6000,
       turret                  = true,
+      weaponAcceleration      = 300,
+      weaponTimer             = 8,
       weaponType              = [[MissileLauncher]],
-      weaponVelocity          = 230,
-	  wobble                  = 5000,
+
+      weaponVelocity          = 750,
     },
 
   },

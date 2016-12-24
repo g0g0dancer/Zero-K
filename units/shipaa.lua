@@ -7,12 +7,12 @@ unitDef = {
   activateWhenBuilt   = true,
   brakeRate              = 0.0808,
 
-  buildCostEnergy        = 400,
-  buildCostMetal         = 400,
+  buildCostEnergy        = 600,
+  buildCostMetal         = 600,
   builder                = false,
 
   buildPic               = [[shipaa.png]],
-  buildTime              = 400,
+  buildTime              = 500,
   canAttack              = true,
   canGuard               = true,
   canMove                = true,
@@ -26,7 +26,7 @@ unitDef = {
 
   customParams           = {
     
-    helptext       = [[With its powerful twin anti-air laser batteries, this Anti-Air Frigate protects your fleet from aerial attackers. As always, it is useless against targets that aren't airborne.]],
+    helptext       = [[Equiped with powerful Anti Air auto cannons that open up on air at range, as well as a powerful AOE Flak cannon that tears small ships to ribons if they get to close.]],
 	modelradius    = [[45]],
 	turnatfullspeed = [[1]],
   },
@@ -48,12 +48,13 @@ unitDef = {
   noAutoFire             = false,
   noChaseCategory        = [[TERRAFORM LAND SINK TURRET SHIP SATELLITE SWIM FLOAT SUB HOVER]],
   objectName             = [[shipaa.s3o]],
-  radarDistance          = 1000,
-  script				 = [[shipaa.lua]],
+  scale                  = [[0.6]],
+  script		 = [[shipaa.lua]],
   seismicSignature       = 4,
   selfDestructAs         = [[BIG_UNITEX]],
   sightDistance          = 660,
-  sonarDistance          = 660,  turninplace            = 0,
+  sonarDistance          = 0,  
+  turninplace            = 0,
   turnRate               = 486,
   waterline              = 4,
   workerTime             = 0,
@@ -61,13 +62,14 @@ unitDef = {
   weapons                = {
 
     [1] = {
-      def                = [[AALASER]],
+      def                = [[FLAK]],
       onlyTargetCategory = [[FIXEDWING GUNSHIP]],
     },
 
 
-    [2] = {
-      def                = [[AALASER]],
+    [2] ={
+      def                = [[EMG]],
+      --badTargetCategory  = [[FIXEDWING]],
       onlyTargetCategory = [[FIXEDWING GUNSHIP]],
     },
 
@@ -76,13 +78,13 @@ unitDef = {
 
   weaponDefs             = {
 
-    AALASER       = {
-      name                    = [[Anti-Air Laser]],
-      accuracy                = 128,
+
+    EMG           = {
+      name                    = [[Anti-Air Autocannon]],
+      accuracy                = 612,
+      alphaDecay              = 0.7,
       areaOfEffect            = 8,
       canattackground         = false,
-      collideFriendly         = false,
-      coreThickness           = 0.5,
       craterBoost             = 0,
       craterMult              = 0,
       cylinderTargeting       = 1,
@@ -90,39 +92,39 @@ unitDef = {
 	  customParams        	  = {
 		isaa = [[1]],
 		
-		light_camera_height = 2600,
-		light_radius = 220,
+		light_camera_height = 1600,
+		light_color = [[0.9 0.86 0.45]],
+		light_radius = 140,
 	  },
 
       damage                  = {
-        default = 1.3,
-        planes  = 12.7,
-        subs    = 1.5,
+        default = 0.78,
+        planes  = 7.8,
+        subs    = 0.5,
       },
 
-      duration                = 0.02,
-      edgeEffectiveness       = 1,
-      explosionGenerator      = [[custom:flash1orange]],
-      fireStarter             = 10,
+      explosionGenerator      = [[custom:ARCHPLOSION]],
       impactOnly              = true,
-      impulseFactor           = 0,
+      impulseBoost            = 0,
+      impulseFactor           = 0.4,
+      intensity               = 0.8,
       interceptedByShieldType = 1,
-      lodDistance             = 10000,
       predictBoost            = 1,
       proximityPriority       = 4,
-      range                   = 1040,
+      range                   = 1250,
       reloadtime              = 0.1,
-      rgbColor                = [[1 0 0]],
-      soundHit                = [[weapon/laser/lasercannon_hit]],
-      soundStart              = [[weapon/laser/lasercannon_fire]],
-      soundTrigger            = true,
-      thickness               = 2.25346954716499,
-      tolerance               = 1000,
-      turnRate                = 48000,
+      rgbColor                = [[1 0.95 0.4]],
+      separation              = 1.5,
+      soundStart              = [[weapon/cannon/brawler_emg]],
+      stages                  = 10,
+      sweepfire               = false,
+      tolerance               = 8192,
       turret                  = true,
-      weaponType              = [[LaserCannon]],
-      weaponVelocity          = 1500,
+      weaponTimer             = 1,
+      weaponType              = [[Cannon]],
+      weaponVelocity          = 1800,
     },
+
 
 
     BOGUS_MISSILE = {
@@ -146,6 +148,7 @@ unitDef = {
       turnRate                = 33000,
       turret                  = true,
       weaponAcceleration      = 101,
+      weaponTimer             = 0.1,
       weaponType              = [[Cannon]],
       weaponVelocity          = 2000,
     },
@@ -153,8 +156,8 @@ unitDef = {
 
     FLAK          = {
       name                    = [[Flak Cannon]],
-      accuracy                = 1000,
-      areaOfEffect            = 64,
+      accuracy                = 400,
+      areaOfEffect            = 115,
       burnblow                = true,
       canattackground         = false,
       craterBoost             = 0,
@@ -167,16 +170,17 @@ unitDef = {
       },
 
       edgeEffectiveness       = 0.85,
-      explosionGenerator      = [[custom:FLAK_HIT_24]],
+      explosionGenerator      = [[custom:LARGE_MUZZLE_FLASH_FX]],
       impulseBoost            = 0,
       impulseFactor           = 0,
       interceptedByShieldType = 1,
       noSelfDamage            = true,
-      range                   = 900,
+      range                   = 800,
       reloadtime              = 0.4,
       soundHit                = [[weapon/flak_hit]],
       soundStart              = [[weapon/flak_fire]],
       turret                  = true,
+      weaponTimer             = 1,
       weaponType              = [[Cannon]],
       weaponVelocity          = 2000,
     },
